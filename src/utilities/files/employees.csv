@@ -1,0 +1,2 @@
+﻿EmployeeId,Firstname,Middlename,Lastname,Actstrdate,Actenddate,Costcntcode,Costcntname,Fsupervisor,Ssupervisor,Tsupervisor,Gender,Nationality,Emails,Positioncode,Positionname,Mgmtstatus,Empgroup,Assessorsts,Coachessts,Tempsuperv,Assignfrmdate,Empgroup,Assignstatus,Empstatus
+400107,MIKIYAS,BEKELE,GEBREKRSTOS,2022-03-28T00:00:00,9999-12-31T00:00:00,EAMG1508,Mgr.ADD Air.Eqp &F.M,300414,300136,11018,1,ET,400107,20004434,ASSISTANT INDUSTRIAL ELEC,2,B,0,0,,0001-01-01T00:00:00,0001-01-01T00:00:00,0,3

@@ -1,0 +1,93 @@
+* {
+    box-sizing: border-box;
+}
+.App {
+    /* font-family: "Hachi Maru Pop", cursive; */
+    display: flex;
+    padding: 15px;
+}
+.App .Meta {
+    font-family: "Staatliches", cursive;
+    flex-grow: 1;
+    padding-right: 15px;
+    color: #2e7d32;
+}
+.App .Meta input {
+    /* font-family: inherit; */
+    padding: 5px;
+    width: 100%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+}
+button {
+    padding: 10px 15px;
+    border: 2px solid #2e7d32;
+    background-color: #2e7d32;
+    font-family: inherit;
+    margin: 20px 0;
+    color: aliceblue;
+    border-radius: 10px;
+    cursor: pointer;
+}
+#downloadWrapper {
+    padding: 20px;
+}
+#certificateWrapper {
+    box-shadow: 0 0 3px #000;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+#certificateWrapper img {
+    display: block;
+}
+p {
+    line-height: 1.6;
+    letter-spacing: 0.8px;
+}
+.owner-name {
+    font-family: Andale Mono, monospace;
+    margin: 0;
+    position: absolute;
+    left: 250px;
+    top: 230px;
+    font-size: 25pt;
+    color: #2e7d32;
+}
+.owner-id {
+    font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    position: absolute;
+    left: 230px;
+    top: 295px;
+    font-size: 20pt;
+    color: rgb(7, 7, 7);
+}
+.owner-body {
+    font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    position: absolute;
+    left: 300px;
+    top: 335px;
+    font-size: 20pt;
+    color: rgb(7, 7, 7);
+}
+.owner-pl {
+    font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    position: absolute;
+    left: 230px;
+    top: 380px;
+    font-size: 20pt;
+    color: rgb(7, 7, 7);
+}
+.date {
+    font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    position: absolute;
+    left: 380px;
+    top: 480px;
+    font-size: 18pt;
+    color: rgb(7, 7, 7);
+}
