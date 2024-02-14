@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: 'coaching_ui'
+    image: 'coaching_ui_i'
+    build:
+      context: .
+    ports:
+      - 8080:80
