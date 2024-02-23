@@ -7,6 +7,7 @@ import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
 import { SplitButton } from "primereact/splitbutton";
 import { InputText } from "primereact/inputtext";
 import { getData, deleteData, postData, putData } from "../../../services/AccessAPI";
@@ -41,6 +42,7 @@ const Costcenter = () => {
     const [captcha, setCaptcha] = useState("");
     const [captchaResult, setCaptchaResult] = useState("");
     const [isEdit, setIsEdit] = useState(false);
+    const [division, setDivision] = useState(null);
     const hiddenFileInput = React.useRef(null);
     let filterData = {
         costCenterCode: "",
@@ -142,6 +144,7 @@ const Costcenter = () => {
 
     //Create new
     const openNew = () => {
+        getDivision();
         setIsEdit(false);
         setResult(emptyResult);
         setSubmitted(false);
@@ -154,6 +157,13 @@ const Costcenter = () => {
 
     const hideDeleteResultDialog = () => {
         setDeleteResultDialog(false);
+    };
+    const getDivision = () => {
+        getData(`/Division/GetAll`, "Costcenters-Index").then((res) => {
+            if (res) {
+                setDivision(res.data);
+            }
+        });
     };
     const saveResult = async () => {
         setSubmitted(true);
@@ -191,6 +201,7 @@ const Costcenter = () => {
     };
 
     const editresult = (result) => {
+        getDivision();
         setIsEdit(true);
         setResult({ ...result });
         setResultDialog(true);
@@ -215,6 +226,13 @@ const Costcenter = () => {
         const val = (e.target && e.target.value) || "";
         let _result = { ...result };
         _result[`${name}`] = val;
+        setResult(_result);
+    };
+    const onDivChange = (e, name) => {
+        debugger;
+        const val = (e.target && e.target.value) || "";
+        let _result = { ...result };
+        _result[`${name}`] = val?.divisionCode;
         setResult(_result);
     };
     const leftToolbarTemplate = () => {
@@ -387,7 +405,7 @@ const Costcenter = () => {
                                         {submitted && !result.description && <small className="p-invalid text-danger">Costcenter Name is required.</small>}
                                         <br />
                                         <label htmlFor="divisionCode">Division</label>
-                                        <InputText id="divisionCode" value={result.divisionCode || ""} onChange={(e) => onInputChange(e, "divisionCode")} required className={classNames({ "p-invalid": submitted && !result.divisionCode })} />
+                                        <Dropdown value={result?.divisionCode} onChange={(e) => onDivChange(e, "divisionCode")} required options={division} optionLabel="divisionCode" filter filterBy="divisionCode" className={classNames({ "p-invalid": submitted && !result.divisionCode })} placeholder={result?.divisionCode} />
                                         {submitted && !result.divisionCode && <small className="p-invalid text-danger">Division is required.</small>}
                                         <br />
                                         <label htmlFor="reportsTo">Reports To</label>

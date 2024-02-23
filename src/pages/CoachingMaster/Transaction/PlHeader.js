@@ -151,6 +151,20 @@ const Plheader = () => {
         setUploadDialog(false);
         hideUploadDialog();
     };
+    const reviseFile = async (e) => {
+        e.preventDefault();
+        let data = {
+            plCode: result?.plCode,
+            plDetails: uploads,
+        };
+        setWaiting(true);
+        await putData(`/PlHeader/Revise`, data, "Plheader-Index");
+
+        setWaiting(false);
+        setUplodStatus(false);
+        setUploadDialog(false);
+        hideUploadDialog();
+    };
     const handleDownload = () => {
         let url = "";
         let fileName = "";
@@ -197,6 +211,7 @@ const Plheader = () => {
         getCaptcha();
         setIsVerified(false);
         setCaptchaResult("");
+        setIsRevise(false);
     };
 
     //Add new
@@ -587,7 +602,7 @@ const Plheader = () => {
     };
 
     const inputTextEditor = (props, field) => {
-        return <InputText type="number" value={props.rowData[field]} onChange={(e) => onEditorValueChange("results", props, e.target.value, field)} />;
+        return <InputText type="number" value={props.rowData[field]} min={0} onChange={(e) => onEditorValueChange("results", props, e.target.value, field)} />;
     };
 
     const liveEditor = (props, name) => {
@@ -622,6 +637,12 @@ const Plheader = () => {
             {waiting ? <Button label="Uploading.." icon="pi pi-spin pi-spinner" style={{ backgroundColor: BASE_COLOR }} disabled={true} /> : <Button label="Save" icon="pi pi-check" disabled={!uploadStatus} style={{ backgroundColor: BASE_COLOR }} className="" onClick={uploadFile} />}
         </>
     );
+    const reviseDialogFooter = (
+        <>
+            <Button label="Cancle" icon="pi pi-times" className="p-button-text" onClick={hideUploadDialog} />
+            {waiting ? <Button label="Uploading.." icon="pi pi-spin pi-spinner" style={{ backgroundColor: BASE_COLOR }} disabled={true} /> : <Button label="Save" icon="pi pi-check" disabled={!uploadStatus} style={{ backgroundColor: BASE_COLOR }} className="" onClick={reviseFile} />}
+        </>
+    );
     const plCouterDisplay = (res) => {
         setSubResult(res.pldetails);
         setShowPlDialog(true);
@@ -630,15 +651,7 @@ const Plheader = () => {
         setShowPlDialog(false);
         setSubResult(null);
     };
-    const plDetailTamplate = (rowData) => {
-        return (
-            <>
-                <span className="p-tag p-tag-success" onClick={() => plCouterDisplay(rowData)}>
-                    <i className="pi pi-eye">{rowData.pldetails.length}</i>
-                </span>
-            </>
-        );
-    };
+
     return (
         <div className="datatable-responsive-demo grid crud-demo">
             <div className="col-12">
@@ -745,6 +758,48 @@ const Plheader = () => {
                             <div className="card p-fluid">
                                 <header>
                                     <h4 className="text-center">{isRevise ? "Revise PL" : "Mass PlHeader Uploading"}</h4>
+                                    <br />
+                                    <span className="text-danger">{error}</span>
+                                    <h5>
+                                        <span className="text-info" onClick={() => handleDownload()}>
+                                            <i className="pi pi-download" /> Download
+                                        </span>
+                                        this sample file to prepare your CSV formate
+                                    </h5>
+
+                                    <div className="head-text">
+                                        <div className="head-image">
+                                            <img src="assets/layout/images/captcha1.png" alt="Captcha" />
+                                        </div>
+                                        <div className="text-on-image">
+                                            <p>{captcha} </p>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 md:col-6">
+                                        <div className="p-inputgroup">
+                                            <InputText placeholder="Enter Captcha" value={captchaResult} onChange={handleCaptcha} />
+                                            <Button icon="pi pi-refresh" style={{ backgroundColor: BASE_COLOR }} onClick={getCaptcha} />
+                                        </div>
+                                    </div>
+
+                                    {!isVerified ? (
+                                        <p className="text-danger">match Captcha to enable Upload </p>
+                                    ) : (
+                                        <p className="text-success">
+                                            <i className="pi pi-check"> Verified</i>
+                                        </p>
+                                    )}
+                                    <input type="file" name="file" ref={hiddenFileInput} style={{ display: "none" }} id="inputGroupFile" required onChange={handleImport} accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                                    <Button disabled={!isVerified} id="filebtn" style={{ backgroundColor: BASE_COLOR, width: "250px" }} onClick={handleClick}>
+                                        {uploadStatus ? " File Selected" : <i className="pi pi-upload"> Choose CSV file</i>}
+                                    </Button>
+                                </header>
+                            </div>
+                        </Dialog>
+                        <Dialog visible={isRevise} style={{ width: "600px" }} header="" modal footer={reviseDialogFooter} onHide={hideUploadDialog}>
+                            <div className="card p-fluid">
+                                <header>
+                                    <h4 className="text-center">Revise PL</h4>
                                     <br />
                                     <span className="text-danger">{error}</span>
                                     <h5>

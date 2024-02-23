@@ -1,4 +1,4 @@
-"use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import { BASE_COLOR } from "../../../services/Settings";
 import { DataTable } from "primereact/datatable";

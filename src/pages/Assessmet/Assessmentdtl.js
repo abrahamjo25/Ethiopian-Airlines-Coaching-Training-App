@@ -184,6 +184,7 @@ const Assessmentdtl = () => {
         return (
             <div className="text-right">
                 <React.Fragment>
+                    {!assessmentStatus && <b>You can't submit the result until the number of tasks set by the manager signed.</b>}
                     <Button label="Submit Result" icon="pi pi-sign-in" disabled={!assessmentStatus} style={{ backgroundColor: BASE_COLOR }} className="btn-danger" onClick={() => setSubmitFinalDialog(true)} />
                 </React.Fragment>
             </div>
@@ -281,7 +282,7 @@ const Assessmentdtl = () => {
                                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} results"
                                 globalFilter={globalFilter}
-                                emptyMessage="No results found."
+                                emptyMessage="No task found for assessment."
                                 footer={resultDialogFooter}
                                 header={header}
                             >

@@ -7,12 +7,12 @@ import { getData } from "../../../services/AccessAPI";
 import { pieOptions } from "../../../services/PieProvider";
 import { BASE_COLOR } from "../../../services/Settings";
 const fetchData = async () => {
-    const res = await getData(`/GeneralReport/GetCoachingReport`, "GeneralReport-Index");
+    const res = await getData(`/GeneralReport/GetCoachingReportByDivision`, "GeneralReport-Index");
     localStorage.setItem("generalCoachingReport", JSON.stringify(res?.data));
     return res.data;
 };
 
-const ActionAndCoaching = ({ groupDataByStatus, getCoaching }) => {
+const ActionAndCoaching = ({ groupDataByStatus, getCoaching, costCenterCode }) => {
     const [loading, setLoading] = useState(true);
     const [coachingStatus, setCoachingStatus] = useState(null);
     const [actionPlan, setActionPlan] = useState(null);
@@ -24,24 +24,29 @@ const ActionAndCoaching = ({ groupDataByStatus, getCoaching }) => {
             try {
                 const parsedData = JSON.parse(storedData);
                 setLoading(false);
-                getLocalData(parsedData);
+                if (costCenterCode) {
+                    let result = parsedData.filter((item) => item.costcenterCode.toLowerCase() === costCenterCode.toLowerCase());
+                    getLocalData(result);
+                } else {
+                    getLocalData(parsedData);
+                }
             } catch (err) {
                 console.log("no stroed data");
             }
         }
 
-        getCoaching &&
-            fetchData()
-                .then((data) => {
-                    updateActionPlanData(data);
-                    updateCoachingData(data);
-                })
-                .catch((error) => {
-                    // Handle any errors
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
+        getCoaching && !costCenterCode &&
+        fetchData()
+            .then((data) => {
+                updateActionPlanData(data);
+                updateCoachingData(data);
+            })
+            .catch((error) => {
+                // Handle any errors
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
     const getLocalData = (data) => {
         updateActionPlanData(data);

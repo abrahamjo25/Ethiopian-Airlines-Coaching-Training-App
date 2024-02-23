@@ -4,12 +4,15 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import AppWrapper from "./AppWrapper";
 import { ToastContainer } from "react-toastify";
+import { AuthProvider } from "./auth/Auth";
 //import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
     <BrowserRouter>
         <ToastContainer />
-        <AppWrapper></AppWrapper>
+        <AuthProvider>
+            <AppWrapper />
+        </AuthProvider>
     </BrowserRouter>,
     document.getElementById("root")
 );

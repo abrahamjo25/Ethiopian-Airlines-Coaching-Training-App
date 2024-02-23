@@ -18,6 +18,9 @@ import AppRouter from "./api/AppRouter";
 import { resetStorage } from "./services/SecureService";
 import AuthVerify from "./services/AuthVerifyService";
 import { Button } from "primereact/button";
+import Cookies from "js-cookie";
+import { HasRoles } from "./services/RoleServices";
+
 const App = () => {
     const [layoutMode, setLayoutMode] = useState("static");
     const [overlayMenuActive, setOverlayMenuActive] = useState(false);
@@ -43,6 +46,19 @@ const App = () => {
         }
         copyTooltipRef && copyTooltipRef.current && copyTooltipRef.current.updateTargetEvents();
     }, [location]);
+
+    const isTokenActive = () => {
+        const token = Cookies.get("token");
+        if (!token) {
+            return false;
+        }
+
+        const expirationTime = new Date(Cookies.get("token_expiration"));
+        const currentTime = new Date();
+
+        return currentTime < expirationTime;
+    };
+
     const logOut = () => {
         resetStorage();
         history.push("/user-login");
@@ -223,9 +239,9 @@ const App = () => {
             setSearchBox(null);
         }
     };
-const readDocs = () => {
-    window.open("/documentation", "_blank");
-};
+    const readDocs = () => {
+        window.open("/documentation", "_blank");
+    };
     return (
         <div className={layoutClassName} onClick={onDocumentClick}>
             <Tooltip ref={copyTooltipRef} target=".block-action-copy" position="bottom" content="Copied to clipboard" event="focus" />
@@ -241,8 +257,12 @@ const readDocs = () => {
                     <AppMenu model={sideNavs} onMenuItemClick={onMenuItemClick} onRootMenuItemClick={onRootMenuItemClick} layoutMode={layoutMode} active={menuActive} />
                     <div className="layout-menu-footer">
                         <div className="layout-menu-footer-title">
-                            <p className="text-white">User guid</p>
-                            <Button label="Documentation" className="p-button-success" onClick={readDocs} />
+                            {HasRoles("Documentation-View") && (
+                                <>
+                                    <p className="text-white">User guid</p>
+                                    <Button label="Documentation" className="p-button-success" onClick={readDocs} />
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

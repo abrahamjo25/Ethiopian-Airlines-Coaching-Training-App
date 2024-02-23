@@ -7,6 +7,7 @@ import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useHistory } from "react-router-dom";
 import { Button } from "primereact/button";
 import { getData } from "../../services/AccessAPI";
+import { HasRoles } from "../../services/RoleServices";
 
 const Container = styled.div`
     display: flex;
@@ -93,7 +94,7 @@ const DocumentationPage = () => {
     const history = useHistory();
     useEffect(() => {
         fetchSidebarData().then((data) => {
-            setSidebarData(data.data);
+            setSidebarData(data?.data);
         });
     }, []);
 
@@ -109,7 +110,7 @@ const DocumentationPage = () => {
     };
 
     const fetchSidebarData = async () => {
-        let res = await getData("/Documentation/GetAll", "Documentation-Index");
+        let res = await getData("/Documentation/GetAll", "Documentation-View");
         return res;
     };
 
@@ -142,14 +143,16 @@ const DocumentationPage = () => {
             </Sidebar>
 
             <Content>
-                <CreateNewButton onClick={createNew}>
-                    <i className="pi pi-plus"></i> Create New
-                </CreateNewButton>
+                {HasRoles("Documentation-Create") && (
+                    <CreateNewButton onClick={createNew}>
+                        <i className="pi pi-plus"></i> Create New
+                    </CreateNewButton>
+                )}
 
                 {selectedSection ? (
                     <Section>
                         <h2>
-                            {selectedSection.title} <Button icon="pi pi-pencil" className="p-button-rounded p-button-secondary p-button-outlined" onClick={(e) => editContent(selectedSection)} />
+                            {selectedSection.title} {HasRoles("Documentation-Create") && <Button icon="pi pi-pencil" className="p-button-rounded p-button-secondary p-button-outlined" onClick={(e) => editContent(selectedSection)} />}
                         </h2>
                         <div dangerouslySetInnerHTML={{ __html: selectedSection.content }} />
                     </Section>
@@ -159,22 +162,6 @@ const DocumentationPage = () => {
                             <Section>
                                 <h2>Getting Started</h2>
                                 <p>This is where you provide information on getting started.</p>
-                            </Section>
-                        </Element>
-
-                        <Element name="section2">
-                            <Section>
-                                <h2>API Reference</h2>
-                                <SyntaxHighlighter language="jsx" style={darcula}>
-                                    {`// Your API reference code goes here`}
-                                </SyntaxHighlighter>
-                            </Section>
-                        </Element>
-
-                        <Element name="section3">
-                            <Section>
-                                <h2>Examples</h2>
-                                <p>Here you can showcase code examples and usage scenarios.</p>
                             </Section>
                         </Element>
                     </div>

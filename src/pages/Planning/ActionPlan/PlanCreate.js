@@ -41,21 +41,20 @@ const ActionPlan = () => {
     const history = useHistory();
 
     useEffect(() => {
-        const fetchData = () => {
-            getData(`/Coaching/GetByCoachId`, "ActionPlan-Index")
-                .then((res) => {
-                    if (res) {
-                        setResults(res.data);
-                    }
-                })
-                .catch(() => {})
-                .finally(() => {
-                    setLoading(false);
-                });
-        };
         fetchData();
     }, []);
-
+    const fetchData = () => {
+        getData(`/Coaching/GetByCoachId`, "ActionPlan-Index")
+            .then((res) => {
+                if (res) {
+                    setResults(res.data);
+                }
+            })
+            .catch(() => {})
+            .finally(() => {
+                setLoading(false);
+            });
+    };
     const hideCheckDialog = () => {
         setActionPlanDialog(false);
         setSelectitem(null);
@@ -99,6 +98,7 @@ const ActionPlan = () => {
             .catch(() => {})
             .finally(() => {
                 setDialogLoading(false);
+                fetchData();
             });
     };
     const saveResult = async () => {

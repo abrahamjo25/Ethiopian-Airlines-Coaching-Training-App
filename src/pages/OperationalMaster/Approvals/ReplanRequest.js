@@ -14,7 +14,7 @@ import { classNames } from "primereact/utils";
 import { today } from "../../Planning/AnnualPlan/minDate";
 import "../../../assets/css/DataTableDemo.css";
 
-const Planning = () => {
+const ReplanRequest = () => {
     let emptyResult = {
         id: null,
         coachingStartDate: "",
@@ -44,7 +44,7 @@ const Planning = () => {
     useEffect(() => {
         const fetchData = () => {
             setLoading(true);
-            getData(`/AnnualPlan/GetByDivision`, "AnnualPlan-Approval")
+            getData(`/AnnualPlan/GetReplanByDivision`, "AnnualPlan-Approval")
                 .then((res) => {
                     if (res) {
                         setResults(res.data);
@@ -70,6 +70,7 @@ const Planning = () => {
         setRejectResultDialog(false);
         setEditResultDialog(false);
         setTerminateResultDialog(false);
+        setRejectResultDialog(false);
     };
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || "";
@@ -93,12 +94,12 @@ const Planning = () => {
     };
     const confirmapprove = async () => {
         setWaiting(true);
-        let data = await putData(`/AnnualPlan/HRApproval?id=${result?.id}`, "AnnualPlan-Approval");
+        let data = await putData(`/AnnualPlan/RePlanHRApproval?id=${result?.id}`, "AnnualPlan-Approval");
         if (data) {
             setResults((prev) =>
                 prev?.map((item) => {
                     if (item?.id === data?.id) {
-                        return { ...item, aproval: "HRApproved" };
+                        return { ...item, replanApproval: "HRApproved" };
                     }
                     return item;
                 })
@@ -111,13 +112,17 @@ const Planning = () => {
     const confirmReject = async () => {
         setSubmitted(true);
         if (result?.id && result?.remark) {
+            let body = {
+                id: result?.id,
+                remark: result?.remark,
+            };
             setWaiting(true);
-            let data = await putData(`/AnnualPlan/HRReject`, result, "AnnualPlan-Approval");
+            let data = await putData(`/AnnualPlan/RePlanHRReject`, body, "AnnualPlan-Approval");
             if (data) {
                 setResults((prev) =>
                     prev?.map((item) => {
                         if (item?.id === data?.id) {
-                            return { ...item, aproval: "Rejected" };
+                            return { ...item, replanApproval: "Rejected" };
                         }
                         return item;
                     })
@@ -127,15 +132,24 @@ const Planning = () => {
             }
             setWaiting(false);
             setSubmitted(false);
+            setRejectResultDialog(false);
         }
     };
     const editPlan = async () => {
         setSubmitted(true);
-        if (result?.employeeId && result?.plCode && result?.coachingStartDate && result?.coachingEndDate && result?.assessmentStartDate && result?.assessmentEndDate) {
+        if (result?.annualPlanId && result?.employeeId && result?.plCode && result?.coachingStartDate && result?.coachingEndDate && result?.assessmentStartDate && result?.assessmentEndDate) {
+            let body = {
+                id: result?.annualPlanId,
+                coachStartDate: result?.coachingStartDate,
+                coachingEndDate: result?.coachingEndDate,
+                assessmentStartDate: result?.assessmentStartDate,
+                assessmentEndDate: result?.assessmentEndDate,
+                plCode: result?.plCode,
+            };
             const isValidDate = isDateValid();
             if (isValidDate) {
                 setWaiting(true);
-                let data = await putData(`/AnnualPlan/Update`, result, "AnnualPlan-Approval");
+                let data = await putData(`/AnnualPlan/Update`, body, "AnnualPlan-Approval");
                 if (data) {
                     setResults((prev) =>
                         prev?.map((item) => {
@@ -155,11 +169,11 @@ const Planning = () => {
     };
     const saveTermination = async () => {
         setSubmitted(true);
-        if (result?.id) {
+        if (result?.annualPlanId) {
             setWaiting(true);
-            let data = await deleteData(`/AnnualPlan/Delete?id=${result?.id}`, "AnnualPlan-Approval");
+            let data = await deleteData(`/AnnualPlan/Delete?id=${result?.annualPlanId}`, "AnnualPlan-Approval");
             if (data) {
-                setResults(results.filter((key) => key.id !== data?.id));
+                setResults(results.filter((key) => key.id !== result?.id));
                 setTerminateResultDialog(false);
                 setResult(emptyResult);
             }
@@ -243,16 +257,15 @@ const Planning = () => {
         setTerminateResultDialog(true);
     };
     const actionBodyTemplate = (data) => {
-        if (data?.aproval !== "HRApproved") {
+        if (data?.replanApproval === "HRApproved") {
+            return <SplitButton label="Manage" className="p-button-raised p-button-success p-button-text mr-2 mb-2" model={items2(data)} onClick={() => items2(data)}></SplitButton>;
+        } else {
             return <SplitButton label="Manage" className="p-button-raised p-button-success p-button-text mr-2 mb-2" model={items1(data)} onClick={() => items1(data)}></SplitButton>;
         }
-        //  else {
-        //     return <SplitButton label="Manage" className="p-button-raised p-button-success p-button-text mr-2 mb-2" model={items2(data)} onClick={() => items2(data)}></SplitButton>;
-        // }
     };
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h4 className="m-0">Annual plan List</h4>
+            <h4 className="m-0">Replan Request</h4>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
@@ -288,8 +301,8 @@ const Planning = () => {
         return (
             <>
                 <Tooltip target=".customer-badge" position="top" />
-                <span className={"customer-badge " + data?.aproval} data-pr-tooltip={data?.remark}>
-                    {data?.aproval}
+                <span className={"customer-badge " + data?.replanApproval} data-pr-tooltip={data?.remark}>
+                    {data?.replanApproval}
                 </span>
             </>
         );
@@ -340,13 +353,19 @@ const Planning = () => {
                 <Column field="plCode" header="PL"></Column>
                 <Column field="coachingStartDate" header="Coaching" body={coachingBody}></Column>
                 <Column field="assessmentStartDate" header="Assessment" body={assessmentBody}></Column>
+                <Column field="replanRemark" header="Reason"></Column>
                 <Column field="aproval" header="Status" body={statusBody}></Column>
                 <Column header="Action" body={actionBodyTemplate}></Column>
             </DataTable>
             <Dialog visible={approveResultDialog} style={{ width: "450px" }} header="Confirm" modal footer={approveResultDialogFooter} onHide={hideDialog}>
                 <div className="flex align-items-center justify-content-center">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: "2rem" }} />
-                    {result && <span>Are you sure you want to approve?</span>}
+                    {result && (
+                        <p>
+                            <span className="text-xl">Are you sure you want to approve? </span>
+                            <br /> <span>After approving the request, make sure to edit coaching dates or terminate to start the plan again based on the user request.</span>
+                        </p>
+                    )}
                 </div>
             </Dialog>
             <Dialog visible={rejectResultDialog} style={{ width: "450px" }} header="Confirm" modal footer={rejectResultDialogFooter} onHide={hideDialog}>
@@ -367,7 +386,7 @@ const Planning = () => {
                     <div className="grid formgrid">
                         <div className="col-12 mb-2 lg:col-6 lg:mb-0">
                             <label>Coaching Start </label>
-                            <input id="minmax" value={result?.coachingEndDate || ""} disabled={true} readOnly className={"datePicker " + classNames({ "p-invalid": submitted && !result.coachingEndDate })} />
+                            <input id="minmax" value={result?.coachingStartDate || ""} disabled={true} readOnly className={"datePicker " + classNames({ "p-invalid": submitted && !result.coachingEndDate })} />
                             {submitted && !result.coachingEndDate && <span className="text-danger">Required</span>}
                         </div>
                         <div className="col-12 mb-2 lg:col-6 lg:mb-0">
@@ -429,4 +448,4 @@ const Planning = () => {
     );
 };
 
-export default Planning;
+export default ReplanRequest;

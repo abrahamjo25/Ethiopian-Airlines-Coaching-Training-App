@@ -84,7 +84,7 @@ const Interms = () => {
     };
     const uploadFile = async () => {
         setWaiting(true);
-        let data = await postData(`/Interim/CreateList`, uploads, "Interim-Index");
+        let data = await postData(`/Interim/CreateList`, uploads, "Interims-Index");
         if (data) {
             setResults((prev) => [...prev, ...data]);
         }
@@ -155,7 +155,7 @@ const Interms = () => {
                 setWaiting(true);
                 setSubmitted(false);
                 setWaiting(true);
-                let data = await putData(`/Interim/Update`, _result, "Interim-Index");
+                let data = await putData(`/Interim/Update`, _result, "Interims-Index");
                 if (data) {
                     setResults((prev) =>
                         prev.map((item) => {
@@ -172,7 +172,7 @@ const Interms = () => {
             } else {
                 setSubmitted(false);
                 setWaiting(true);
-                let data = await postData(`/Interim/Create`, _result, "Interim-Index");
+                let data = await postData(`/Interim/Create`, _result, "Interims-Index");
                 if (data) {
                     setResults((prev) => [...prev, data]);
                     setResultDialog(false);
@@ -195,7 +195,7 @@ const Interms = () => {
 
     const deleteResult = async () => {
         setWaiting(true);
-        let data = await deleteData(`/Interim/Delete?id=${result?.id}`, "Interim-Index");
+        let data = await deleteData(`/Interim/Delete?id=${result?.id}`, "Interims-Index");
         if (data) {
             setResults(results.filter((item) => item.id !== data?.id));
             setDeleteResultDialog(false);

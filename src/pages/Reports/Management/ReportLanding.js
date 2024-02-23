@@ -25,8 +25,6 @@ export const ReportLanding = () => {
     const toast = useRef();
     const [loading, setLoading] = useState(true);
 
-    const [coachingStatus, setCoachingStatus] = useState(null);
-    const [actionPlan, setActionPlan] = useState(null);
     const [annualPlan, setAnnualPlan] = useState(null);
     const [assessmentReport, setAssessmentReport] = useState(null);
     const [interimReport, setIterimReport] = useState(null);
@@ -144,7 +142,7 @@ export const ReportLanding = () => {
     };
 
     const planHeader = <Button label="Plan Summary" icon="pi pi-chevron-right" onClick={() => setGetCoaching(false)} className="p-button-raised p-button-secondary p-button-text" />;
-    const resultHeader = <Button label="Coaching & Assessment" icon="pi pi-chevron-right" onClick={() => setGetCoaching(true)} className="p-button-raised p-button-secondary p-button-text" />;
+    const resultHeader = <Button label="Coaching" icon="pi pi-chevron-right" onClick={() => setGetCoaching(true)} className="p-button-raised p-button-secondary p-button-text" />;
     return (
         <div className="">
             <Toast ref={toast} />

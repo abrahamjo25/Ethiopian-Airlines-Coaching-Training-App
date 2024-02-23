@@ -93,7 +93,7 @@ const RePlan = () => {
             .then((res) => {
                 if (res) {
                     setTask(res.data);
-                    const selectedIds = res.data.map((selectedTask) => selectedTask.id);
+                    const selectedIds = res.data?.map((selectedTask) => selectedTask.id);
                     setResult({ fromDate: data?.fromDate, toDate: data.toDate, ids: selectedIds });
                     setSelectitem(res.data);
                 }
@@ -181,7 +181,7 @@ const RePlan = () => {
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} results"
                             globalFilter={globalFilter}
-                            emptyMessage="No results found."
+                            emptyMessage="No created action plan  found to update."
                             header={header}
                         >
                             <Column field="" header="No" body={rowCount} className="p-column-title"></Column>

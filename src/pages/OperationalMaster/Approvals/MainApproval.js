@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import PlApproval from "./PlApproval";
 import Planning from "./Planning";
 import Trainer from "./Trainer";
+import ReplanRequest from "./ReplanRequest";
 
 const MainApproval = () => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -32,6 +33,9 @@ const MainApproval = () => {
                     </TabPanel>
                     <TabPanel header="Trainer">
                         <Trainer />
+                    </TabPanel>
+                    <TabPanel header="Replan Request">
+                        <ReplanRequest />
                     </TabPanel>
                 </TabView>
             </div>

@@ -23,7 +23,7 @@ const HrSpecialist = () => {
     const startDate = useRef(null);
     const endDate = useRef(null);
     const [loading, setLoading] = useState(true);
-    const [results, setResults] = useState(null);
+    const [results, setResults] = useState([]);
     const [waiting, setWaiting] = useState(false);
     const [resultDialog, setResultDialog] = useState(false);
     const [deleteResultDialog, setDeleteResultDialog] = useState(false);
@@ -43,6 +43,7 @@ const HrSpecialist = () => {
         getData(`/HRSpecialist/GetAll`, "HRSpecialist-Index")
             .then((res) => {
                 if (res) {
+                    console.log(res.data);
                     setResults(res.data);
                 }
             })
@@ -53,7 +54,7 @@ const HrSpecialist = () => {
     };
     const getDivision = async () => {
         setDialogLoading(true);
-        await getData(`/Division/GetAll`, `Division-Index`)
+        await getData(`/Division/GetAll`, `HRSpecialist-Index`)
             .then((result) => {
                 if (result) {
                     setDivisions(result.data);
@@ -117,10 +118,17 @@ const HrSpecialist = () => {
         }
     };
 
-    const editresult = (result) => {
+    const editresult = (res) => {
+        debugger;
         getDivision();
         setIsEdit(true);
-        setResult({ ...result });
+        let _result = { ...result };
+        _result["id"] = res?.id;
+        _result["divisionCode"] = res?.divisionCode;
+        _result["employeeId"] = res?.employee?.employeeId;
+        _result["activeFrom"] = res?.activeFrom;
+        _result["activeTo"] = res?.activeTo;
+        setResult(_result);
         setResultDialog(true);
     };
     const confirmDeleteResult = (result) => {
@@ -252,7 +260,7 @@ const HrSpecialist = () => {
                     >
                         <Column field="" header="No" body={rowCount} className="p-column-title"></Column>
                         <Column field="divisionCode" header="Division Code" className="p-column-title"></Column>
-                        <Column field="employeeId" header="Responsible person" className="p-column-title"></Column>
+                        <Column field="employee.employeeId" header="Responsible person" className="p-column-title"></Column>
                         <Column field="activeFrom" header="Active from Date" className="p-column-title"></Column>
                         <Column field="activeTo" header="Active to Date" className="p-column-title"></Column>
                         <Column header="Action" body={actionBodyTemplate}></Column>

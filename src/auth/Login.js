@@ -38,29 +38,8 @@ function Login() {
         setLoginInput(_result);
     };
 
-    const checkEmployee = (employeeId) => {
-        getData(`/GeneralMasters/Employees/GetByEmployeeId?employeeId=${employeeId}`, "Employees-GetByEmployeeId")
-            .then((res) => {
-                if (res && res.data.Status === 4) {
-                    localStorage.removeItem("user");
-                    localStorage.removeItem("idToken");
-                    localStorage.removeItem("userRefreshToken");
-                    setError("Employee not Active!");
-                } else {
-                    history.push(`/`);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
-
     const submitLogin = async (e) => {
         setError("");
-
         setSubmitted(true);
 
         e.preventDefault();
@@ -69,10 +48,11 @@ function Login() {
             setSubmitted(false);
 
             setLoading(true);
+            const access = localStorage.getItem("access");
             await axiosLogin
                 .post("/api/v1/User/Login", loginInput, {
                     headers: {
-                        accessToken: localStorage.getItem("access"),
+                        accessToken: access,
                     },
                 })
                 .then((res) => {
@@ -92,6 +72,7 @@ function Login() {
                 })
 
                 .catch((err) => {
+                    console.log(err);
                     setLoading(false);
                     if (err.response) {
                         setError(err.response.data.errors[0]);

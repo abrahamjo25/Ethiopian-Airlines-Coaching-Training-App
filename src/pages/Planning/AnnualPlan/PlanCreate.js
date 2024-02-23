@@ -14,14 +14,17 @@ import PlanAlert from "./PlanAlert";
 import { today } from "./minDate";
 import { Toolbar } from "primereact/toolbar";
 import { Tooltip } from "primereact/tooltip";
+import { InputTextarea } from "primereact/inputtextarea";
 import moment from "moment";
 import Coaches from "./Coaches";
 import Assessors from "./Assessors";
 import "../../../assets/css/DataTableDemo.css";
+import { useHistory } from "react-router";
 
 const AnnualPlans = () => {
     const emptyResult = {
-        employeeId: "",
+        id: null, //Database employee Id
+        employeeId: "", // Normale employee Id
         coachingStartDate: "",
         coachingEndDate: "",
         assessmentStartDate: "",
@@ -30,10 +33,9 @@ const AnnualPlans = () => {
         duration: null,
         fullName: "",
     };
-    const pl = {
-        Pldescription: "",
-        Pllevel: "",
-        Compduration: "",
+    let replanData = {
+        id: null, //annualPlan Id
+        requestReason: "",
     };
     const [approveDialog, setApproveDialog] = useState(false);
     const [plValue, setPlValue] = useState(null);
@@ -47,6 +49,7 @@ const AnnualPlans = () => {
     const [results, setResults] = useState([]);
     const [assessorDialog, setAssessorDialog] = useState(false);
     const [coachDialog, setCoachDialog] = useState(false);
+    const [replanDialog, setReplanDialog] = useState(false);
     const [resultDialog, setResultDialog] = useState(false);
     const [deleteResultDialog, setDeleteResultDialog] = useState(false);
     const [employee, setEmployee] = useState(null);
@@ -55,6 +58,7 @@ const AnnualPlans = () => {
     const [selected, setSelected] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
+    const [replan, setReplan] = useState(replanData);
     const toast = useRef(null);
     const dt = useRef(null);
     const coachingStart = useRef(null);
@@ -63,6 +67,7 @@ const AnnualPlans = () => {
     useEffect(() => {
         fetchData();
     }, []);
+    const history = useHistory();
     const fetchData = () => {
         setLoading(true);
         getData(`/AnnualPlan/GetByCostCenter`, "AnnualPlan-Index")
@@ -183,6 +188,16 @@ const AnnualPlans = () => {
         }
         setWaiting(false);
     };
+
+    // Replan request
+    const saveRequest = async () => {
+        setWaiting(true);
+        await postData(`/AnnualPlan/CreateReplan`, replan, "AnnualPlan-Index");
+        setReplanDialog(false);
+        setReplan(replanData);
+
+        setWaiting(false);
+    };
     const hideDialog = () => {
         setMessage("");
         setResult(emptyResult);
@@ -195,6 +210,8 @@ const AnnualPlans = () => {
         setCoachDialog(false);
         setAssessorDialog(false);
         setTaskResultDialog(false);
+        setReplanDialog(false);
+        setReplan(replanData);
     };
 
     const getEmployee = () => {
@@ -256,11 +273,23 @@ const AnnualPlans = () => {
     const onEmployeeChange = (e, name) => {
         const val = (e.target && e.target.value) || "";
         let _result = { ...result };
-        _result[`${name}`] = val?.id;
+        _result["id"] = val?.id;
+        _result[`${name}`] = val?.employeeId;
         _result[`fullName`] = val?.fullName;
         setResult(_result);
     };
-
+    const onInputChange = (e, name) => {
+        const val = (e.target && e.target.value) || "";
+        let _replan = { ...replan };
+        _replan[`${name}`] = val;
+        setReplan(_replan);
+    };
+    const getReplan = (annualPlanId) => {
+        let _replan = { ...replan };
+        _replan["annualPlanId"] = annualPlanId;
+        setReplan(_replan);
+        setReplanDialog(true);
+    };
     const resultDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text btn-success" onClick={hideDialog} />
@@ -277,6 +306,12 @@ const AnnualPlans = () => {
         <>
             <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
             {waiting ? <Button label="Deleting" icon="pi pi-spin pi-spinner" style={{ backgroundColor: BASE_COLOR }} disabled={true} /> : <Button label="Yes" icon="pi pi-check" style={{ backgroundColor: BASE_COLOR }} className="" onClick={deleteResult} />}
+        </>
+    );
+    const replanDialogFooter = (
+        <>
+            <Button label="Cancle" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            {waiting ? <Button label="Saving" icon="pi pi-spin pi-spinner" style={{ backgroundColor: BASE_COLOR }} disabled={true} /> : <Button label="Send" icon="pi pi-check" style={{ backgroundColor: BASE_COLOR }} className="" onClick={saveRequest} />}
         </>
     );
     const items = (data) => [
@@ -334,6 +369,15 @@ const AnnualPlans = () => {
                       setAssessorDialog(true);
                   },
               },
+        data?.aproval === "HRApproved"
+            ? {
+                  label: "Replan Request",
+                  icon: "pi pi-replay",
+                  command: () => {
+                      getReplan(data?.id);
+                  },
+              }
+            : "",
     ];
     const planBodyTemplate = (rowData) => {
         return <SplitButton label="Action" className="p-button-raised p-button-success p-button-text mr-2 mb-2" model={items(rowData)} onClick={(e) => items(rowData)}></SplitButton>;
@@ -584,6 +628,28 @@ const AnnualPlans = () => {
                         </Dialog>
                         <Dialog visible={coachDialog} style={{ width: "700px" }} modal onHide={hideDialog}>
                             <Coaches invoked={coachDialog} annualplanId={result?.id} plCode={result?.plCode} onClose={hideDialog} />
+                        </Dialog>
+                        <Dialog visible={replanDialog} style={{ width: "700px" }} modal footer={replanDialogFooter} onHide={hideDialog}>
+                            <div className="card p-fluid" style={{ borderColor: BASE_COLOR }}>
+                                <h4 className="text-center">Replan Request </h4>
+                                <div className="">
+                                    <div className="field col">
+                                        <label htmlFor="requestReason">Reason</label>
+                                        <InputTextarea
+                                            id="requestReason"
+                                            cols={25}
+                                            rows={5}
+                                            autoResize
+                                            value={replan.requestReason}
+                                            onChange={(e) => onInputChange(e, "requestReason")}
+                                            placeholder="Write your reason, you can request for change coaching dates or for plan termination."
+                                            required
+                                            className={classNames({ "p-invalid": submitted && !replan.requestReason })}
+                                        />
+                                        {submitted && !replan.requestReason && <small className="p-invalid text-danger">Write your reason here.</small>}
+                                    </div>
+                                </div>
+                            </div>
                         </Dialog>
                     </div>
                 </div>

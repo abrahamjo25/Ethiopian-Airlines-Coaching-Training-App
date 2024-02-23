@@ -71,7 +71,7 @@ const PlDetails = () => {
     }, []);
 
     const getPLAndTask = () => {
-        getData(`/TaskCategory/GetAll`, "TaskCategory-Index")
+        getData(`/TaskCategory/GetAll`, "Pldetails-Index")
             .then((result) => {
                 if (result) {
                     setTaskCategory(result.data);

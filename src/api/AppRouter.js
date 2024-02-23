@@ -13,16 +13,12 @@ import PLDetail from "../pages/CoachingMaster/Transaction/PlDetails";
 import PlHeader from "../pages/CoachingMaster/Transaction/PlHeader";
 import Interms from "../pages/GeneralMaster/Operational/Interms";
 
-import Tempmapping from "../pages/OperationalMaster/Tempmapping";
-
 import TraineerList from "../pages/OperationalMaster/Trainer/TraineerList";
 
-import MassMapping from "../pages/OperationalMaster/MassMapping";
 import ActionPlan from "../pages/Planning/ActionPlan/PlanCreate";
 import ReplanActionPlan from "../pages/Planning/ActionPlan/ReplanAction";
 
 import AnnulaPlans from "../pages/Planning/AnnualPlan/PlanCreate";
-import AnnualRePlan from "../pages/Planning/AnnualPlan/RePlan";
 
 import TraineeSign from "../pages/Coaching/TraineeSign";
 import CoachAction from "../pages/Coaching/CoachAction";
@@ -36,7 +32,6 @@ import { AnnualPlanReport } from "../pages/Reports/General/AnnualPlanReport";
 import Employees from "../pages/GeneralMaster/Operational/Employees";
 import PlStatus from "../pages/Reports/Status/PlStatus";
 import CoachingStatus from "../pages/Reports/Status/CoachingStatus";
-import ReplanRequest from "../pages/Planning/AnnualPlan/ReplanRequest";
 import CoachingStsDetail from "../pages/Reports/Status/CoachingStsDetail";
 import { ReportLanding } from "../pages/Reports/Management/ReportLanding";
 import { AnnualPlan } from "../pages/Reports/Management/AnnualPlan";
@@ -55,6 +50,7 @@ import InterimDetail from "../pages/Assessmet/InterimDetail";
 import Coachingdtl from "../pages/Coaching/Coachingdtl";
 import Assessmentdtl from "../pages/Assessmet/Assessmentdtl";
 import PlanDuration from "../pages/OperationalMaster/PlanDuration";
+import MainMapping from "../pages/OperationalMaster/Mappings/MainMapping";
 
 function AppRouter(props) {
     return (
@@ -71,16 +67,13 @@ function AppRouter(props) {
             <Route path="/interm-assessments" component={Interms} />
             <Route path="/pass-marks" component={Passmarks} />
             <Route path="/traineer-lists" component={TraineerList} />
-            <Route path="/temporary-mapping" component={Tempmapping} />
-            <Route path="/employee-mass-mapping" component={MassMapping} />
+            <Route path="/create-mapping" component={MainMapping} />
             <Route path="/annual-plans" component={AnnulaPlans} />
             <Route path="/action-plan" component={ActionPlan} />
             <Route path="/action-replan" component={ReplanActionPlan} />
             <Route path="/trainee-sign" component={TraineeSign} />
             <Route path="/coach-action" component={CoachAction} />
             <Route path="/coaching-detail" component={Coachingdtl} />
-            <Route path="/annual-replan-request" component={ReplanRequest} />
-            <Route path="/annual-plan-replan" component={AnnualRePlan} />
             <Route path="/re-plan" component={ReplanActionPlan} />
             <Route path="/take-interm-assessments" component={IntrimAssessment} />
             <Route path="/interm-detail" component={InterimDetail} />

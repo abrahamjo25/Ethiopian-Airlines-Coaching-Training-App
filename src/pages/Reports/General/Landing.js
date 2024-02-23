@@ -17,7 +17,7 @@ import { InputText } from "primereact/inputtext";
 import ActionAndCoaching from "./ActionAndCoaching";
 
 const fetchData = async () => {
-    const res = await getData(`/GeneralReport/GetReport`, "GeneralReport-Index");
+    const res = await getData(`/GeneralReport/GetReportByDivision`, "GeneralReport-Index");
     localStorage.setItem("generalReport", JSON.stringify(res?.data));
     return res.data;
 };
@@ -31,8 +31,7 @@ export const Landing = () => {
     const [assessmentReport, setAssessmentReport] = useState(null);
     const [interimReport, setIterimReport] = useState(null);
     const [selectedCostcenter, setSelectedCostcenter] = useState(null);
-    const [selectedDivision, setSelectedDivision] = useState(null);
-    const [division, setDivision] = useState(null);
+    const [costCenter, setCostcenter] = useState(null);
     const [getCoaching, setGetCoaching] = useState(false);
 
     useEffect(() => {
@@ -59,13 +58,13 @@ export const Landing = () => {
             .finally(() => {
                 setLoading(false);
             });
-        getDivision();
+        getCostcenter();
     }, []);
-    const getDivision = () => {
-        getData(`/Division/GetAll`, "GeneralReport-Index")
+    const getCostcenter = () => {
+        getData(`/CostCenter/GetByDivision`, "GeneralReport-Index")
             .then((res) => {
                 if (res) {
-                    setDivision(res.data);
+                    setCostcenter(res.data);
                 }
             })
             .catch(() => {});
@@ -133,14 +132,7 @@ export const Landing = () => {
         }, {});
         return groupedData;
     };
-    const getReportByDiv = (divisionCode) => {
-        const storedData = localStorage.getItem("generalReport");
-        if (storedData) {
-            const parsedData = JSON.parse(storedData);
-            const result = parsedData?.filter((key) => key.divisionCode.toLowerCase() === divisionCode.toLowerCase());
-            getLocalData(result);
-        }
-    };
+
     const getReportByCost = (costcenterCode) => {
         const storedData = localStorage.getItem("generalReport");
         if (storedData) {
@@ -163,27 +155,23 @@ export const Landing = () => {
     const viewInterimReport = () => {
         history.push(`/reports-interim-assessment-report`);
     };
-    const onDivisionChange = (e) => {
+    const onCostChange = (e) => {
         let val = (e.target && e.target.value) || "";
-        setSelectedDivision(val);
-        getReportByDiv(val.divisionCode);
-    };
-    const onInputChange = (e) => {
-        const val = (e.target && e.target.value) || "";
         setSelectedCostcenter(val);
+        getReportByCost(val?.costCenterCode);
     };
+
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center py-3">
-            <h5 className="m-0">Report Analytics {selectedDivision?.divisionCode ? `[${selectedDivision?.divisionCode}]` : ""}</h5>
+            <h5 className="m-0">Report Analytics</h5>
             <div className="grid gap-2">
-                <Dropdown value={selectedDivision} filter options={division} optionLabel="divisionCode" onChange={(e) => onDivisionChange(e)} placeholder="Filter by Division" />
-                <InputText value={selectedCostcenter ? selectedCostcenter : ""} onChange={(e) => onInputChange(e)} placeholder="Search by Cost center" />
+                <Dropdown value={selectedCostcenter} filter options={costCenter} optionLabel="costCenterCode" onChange={(e) => onCostChange(e)} placeholder="Filter by costcenter" />
                 <Button label="Search" className="p-button-raised p-button" disabled={selectedCostcenter ? false : true} onClick={() => getReportByCost(selectedCostcenter)} />
             </div>
         </div>
     );
     const planHeader = <Button label="Plan Summary" icon="pi pi-chevron-right" onClick={() => setGetCoaching(false)} className="p-button-raised p-button-secondary p-button-text" />;
-    const resultHeader = <Button label="Coaching & Assessment" icon="pi pi-chevron-right" onClick={() => setGetCoaching(true)} className="p-button-raised p-button-secondary p-button-text" />;
+    const resultHeader = <Button label="Coaching" icon="pi pi-chevron-right" onClick={() => setGetCoaching(true)} className="p-button-raised p-button-secondary p-button-text" />;
     return (
         <div className="">
             <Toast ref={toast} />
@@ -275,7 +263,7 @@ export const Landing = () => {
                         </div>
                     </TabPanel>
                     <TabPanel header={resultHeader}>
-                        <ActionAndCoaching groupDataByStatus={groupDataByStatus} getCoaching={getCoaching} />
+                        <ActionAndCoaching groupDataByStatus={groupDataByStatus} getCoaching={getCoaching} costCenterCode={selectedCostcenter?.costCenterCode} />
                     </TabPanel>
                 </TabView>
             </div>

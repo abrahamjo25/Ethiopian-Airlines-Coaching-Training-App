@@ -8,7 +8,7 @@ import { getData } from "../../../services/AccessAPI";
 import moment from "moment/moment";
 
 const fetchData = async () => {
-    const res = await getData(`/GeneralReport/GetCoachingReport`, "GeneralReport-Index");
+    const res = await getData(`/GeneralReport/GetCoachingReportByDivision`, "GeneralReport-Index");
     localStorage.setItem("generalCoachingReport", JSON.stringify(res?.data));
     return res.data;
 };

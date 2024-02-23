@@ -38,7 +38,7 @@ const InterimDetail = () => {
         fetchData();
     }, []);
     const fetchData = () => {
-        getData(`/MonthlyInterim/GetByAnnualPlanId?annualPlanId=${id}`, "Interim-Index")
+        getData(`/MonthlyInterim/GetByAnnualPlanId?annualPlanId=${id}`, "Interim-Assessment")
             .then((res) => {
                 if (res) {
                     setResults(res.data);
@@ -53,10 +53,10 @@ const InterimDetail = () => {
         setIntrimDialog(false);
         setSelectedResults(null);
     };
-    const postIntrim = () => {
+    const postIntrim = async () => {
         if (selectedResults !== null) {
             setWaiting(true);
-            let data = postData(`/MonthlyInterim/Create`, result, "Interim-Index");
+            let data = await postData(`/MonthlyInterim/Create`, result, "Interim-Assessment");
             if (data) {
                 fetchData();
             }
@@ -78,7 +78,7 @@ const InterimDetail = () => {
     const takeIntrim = () => {
         setIntrimDialog(true);
         setDialogLoading(true);
-        getData(`/Interim/GetAll`, "Interim-Index")
+        getData(`/Interim/GetAll`, "Interim-Assessment")
             .then((res) => {
                 setIntrims(res.data);
                 const updatedIntrims = res.data?.map((item) => ({

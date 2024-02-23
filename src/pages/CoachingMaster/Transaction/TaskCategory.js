@@ -160,7 +160,7 @@ const TaskCategory = () => {
     };
     const getDivision = async () => {
         setDialogLoading(true);
-        await getData(`/Division/GetAll`, `Division-Index`)
+        await getData(`/Division/GetAll`, `TaskCategories-Index`)
             .then((result) => {
                 if (result) {
                     setdivisionCode(result.data);

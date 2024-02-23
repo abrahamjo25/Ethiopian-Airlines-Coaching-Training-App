@@ -22,7 +22,7 @@ const IntrimAssessment = () => {
     useEffect(() => {
         setLoading(true);
         const fetchData = () => {
-            getData(`/Assessment/GetForInterim`, "Interim-Index")
+            getData(`/Assessment/GetForInterim`, "Interim-Assessment")
                 .then((res) => {
                     if (res) {
                         setResult(res.data);

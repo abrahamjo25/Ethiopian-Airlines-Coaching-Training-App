@@ -4,7 +4,7 @@ export const HasRoles = (props) => {
     if (user) {
         const roles = user.roles;
         if (roles) {
-            const filteredRoles = roles.map((key) => key.claims.filter((index) => index.clientId === 29));
+            const filteredRoles = roles.map((key) => key.claims.filter((index) => index.clientId === 8));
             filteredRoles.map((key) => {
                 for (let i = 0; i < key.length; i++) {
                     if (key[i].claim === props) {

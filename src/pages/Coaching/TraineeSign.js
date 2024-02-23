@@ -70,7 +70,7 @@ const TraineeSign = () => {
             } else {
                 setSubmitted(false);
                 setWaiting(true);
-                let res = await putData("/Coaching/TraineeAction", result, "Traineeactions-Traineetasksign");
+                let res = await putData("/Coaching/TraineeAction", result, "TraineSign-Index");
                 if (res) {
                     setResults((prev) =>
                         prev?.map((item) => {

@@ -7,7 +7,6 @@ import ForgotePassword from "./auth/ForgotePassword";
 import ChangePassword from "./auth/ChangePassword";
 import ServerError from "./auth/ServerError";
 import { Unauthorized } from "./auth/Unauthorized";
-import { AuthProvider } from "./auth/Auth";
 import Login from "./auth/Login";
 import { Suspense } from "react";
 import Loading from "./pages/Defaults/Loading";
@@ -45,9 +44,7 @@ const AppWrapper = (props) => {
         default:
             return (
                 <Suspense fallback={Loading}>
-                    <AuthProvider>
-                        <App />
-                    </AuthProvider>
+                    <App />
                 </Suspense>
             );
     }

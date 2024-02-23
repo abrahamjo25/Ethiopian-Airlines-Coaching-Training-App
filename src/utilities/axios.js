@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 const baseURL = "https://localhost:7105/api/v1";
 // const baseURL = process.env.REACT_APP_DEV_URL;
-const authURL = process.env.REACT_APP_AUTH_URL;
+const authURL = "http://svhqdts01:1214";
 const clientCredential = {
     clientId: process.env.REACT_APP_CLIENT_ID,
     clientSecret: process.env.REACT_APP_CLIENT_SECRET,
@@ -71,6 +71,7 @@ export const axiosLogin = axios.create({
         "Access-Control-Allow-Credentials": true,
         "Access-control-Allow-Origin": "*",
         serviceKey: "",
+        clientClaim: "User-Login",
     },
 });
 

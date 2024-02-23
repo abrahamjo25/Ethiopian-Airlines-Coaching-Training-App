@@ -85,7 +85,7 @@ const Division = () => {
     };
     const uploadFile = async () => {
         setWaiting(true);
-        let data = await postData(`/Division/CreateList`, uploads, "Costcenters-Index");
+        let data = await postData(`/Division/CreateList`, uploads, "Divisions-Index");
         if (data) {
             setResults((prev) => [...prev, ...data]);
         }
@@ -158,7 +158,7 @@ const Division = () => {
                 setWaiting(true);
                 setSubmitted(false);
                 setWaiting(true);
-                let data = await putData(`/Division/Update`, _result, "Division-Index");
+                let data = await putData(`/Division/Update`, _result, "Divisions-Index");
                 if (data) {
                     setResults((prev) =>
                         prev.map((item) => {
@@ -175,7 +175,7 @@ const Division = () => {
             } else {
                 setSubmitted(false);
                 setWaiting(true);
-                let data = await postData(`/Division/Create`, _result, "Division-Index");
+                let data = await postData(`/Division/Create`, _result, "Divisions-Index");
                 if (data) {
                     setResults((prev) => [...prev, data]);
                     setResultDialog(false);
