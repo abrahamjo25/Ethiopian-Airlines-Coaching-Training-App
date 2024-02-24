@@ -1,5 +1,5 @@
 import axios from "axios";
-import { axiosInstance, axiosLogin } from "../utilities/axios";
+import { axiosInstance, axiosLogin, changePassword } from "../utilities/axios";
 import { createBrowserHistory } from "history";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -154,7 +154,7 @@ export const GetDataPassword = async (path, data, accessToken) => {
 };
 export const postIdentityData = async (path, data, claim) => {
     try {
-        return await axiosLogin.post(path + "", data, {
+        return await changePassword.post(path + "", data, {
             headers: {
                 clientClaim: claim,
                 accessToken: localStorage.getItem("access"),

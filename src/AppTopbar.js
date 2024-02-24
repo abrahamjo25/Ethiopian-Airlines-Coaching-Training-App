@@ -73,12 +73,6 @@ const AppTopbar = (props) => {
         setSubmitted(false);
         setPasswordDialog(true);
     };
-    // const ChangePasswordDialog = () => {
-    //     debugger;
-    //     const currentOrigin = window.location.origin;
-    //     const idToken = localStorage.getItem("idToken");
-    //     window.location.href = `https://dev-iam.ethiopianairlines.com/reset-password?origin=${encodeURIComponent(currentOrigin)}&idToken=${idToken}`;
-    // };
     const hidePasswordDialog = () => {
         setStyle("");
         setPasswordDialog(false);

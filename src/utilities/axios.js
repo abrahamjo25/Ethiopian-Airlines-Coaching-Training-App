@@ -73,6 +73,13 @@ export const axiosLogin = axios.create({
         clientClaim: "User-Login",
     },
 });
+export const changePassword = axios.create({
+    baseURL: authURL,
+    headers: {
+        "Access-Control-Allow-Credentials": true,
+        "Access-control-Allow-Origin": "*",
+    },
+});
 
 axiosLogin.interceptors.response.use(
     (response) =>
