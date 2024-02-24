@@ -28,20 +28,19 @@ const CreateDocs = () => {
         setResult(_result);
     };
     const saveResult = async () => {
-        debugger;
         setSubmitted(true);
         if (result.title && result.content) {
             let _result = { ...result };
             if (result?.id != 0) {
                 setWaiting(true);
                 setSubmitted(false);
-                await putData(`/Documentation/Update`, _result, "Documentation-Index");
+                await putData(`/Documentation/Update`, _result, "Documentation-Create");
                 setResult(emptyResult);
                 setWaiting(false);
             } else {
                 setSubmitted(false);
                 setWaiting(true);
-                await postData(`/Documentation/Create`, _result, "Documentation-Index");
+                await postData(`/Documentation/Create`, _result, "Documentation-Create");
                 setWaiting(false);
             }
             history.push("/documentation");

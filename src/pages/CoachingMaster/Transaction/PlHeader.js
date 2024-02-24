@@ -20,6 +20,7 @@ import PlDetailURL from "../../../utilities/files/Pldetail.csv";
 import "../../../assets/css/style.css";
 import { PLMapping } from "./Plmapping";
 import "../../../assets/css/DataTableDemo.css";
+import { HasRoles } from "../../../services/RoleServices";
 
 const Plheader = () => {
     let emptyResult = {
@@ -495,7 +496,7 @@ const Plheader = () => {
     const items = (data) => {
         const result = [];
 
-        if (data?.aproval === "Ready" || data?.approval === "Rejected") {
+        if (data?.aproval === "Ready" || data?.aproval === "Rejected") {
             result.push({
                 label: "Approve",
                 icon: "pi pi-check",
@@ -503,34 +504,41 @@ const Plheader = () => {
                     checkApproval(data);
                 },
             });
-        } else if (data?.approval === "ManagerApproved") {
+        } else if (data?.aproval === "ManagerApproved") {
             result.push({
                 label: "Approval Sent",
                 disabled: true,
             });
-        } else if (data?.approval === "HRApproved") {
+        } else if (data?.aproval === "HRApproved") {
             result.push({
                 label: "Approved",
                 disabled: true,
             });
         }
 
-        result.push({
-            label: "Edit",
-            icon: "pi pi-pencil",
-            command: () => {
-                editresult(data);
-            },
-        });
+        data?.aproval !== "HRApproved"
+            ? result.push({
+                  label: "Edit",
+                  icon: "pi pi-pencil",
+                  command: () => {
+                      editresult(data);
+                  },
+              })
+            : result.push({
+                  label: "Edit",
+                  disabled: true,
+              });
 
-        result.push({
-            label: "Revise",
-            icon: "pi pi-replay",
-            command: () => {
-                revisePL(data);
-            },
-        });
-        data.approval !== "HRApproved"
+        HasRoles("PL-Revision") &&
+            result.push({
+                label: "Revise",
+                icon: "pi pi-replay",
+                command: () => {
+                    revisePL(data);
+                },
+            });
+
+        data?.aproval !== "HRApproved"
             ? result.push({
                   label: "Delete",
                   icon: "pi pi-trash",
@@ -643,10 +651,6 @@ const Plheader = () => {
             {waiting ? <Button label="Uploading.." icon="pi pi-spin pi-spinner" style={{ backgroundColor: BASE_COLOR }} disabled={true} /> : <Button label="Save" icon="pi pi-check" disabled={!uploadStatus} style={{ backgroundColor: BASE_COLOR }} className="" onClick={reviseFile} />}
         </>
     );
-    const plCouterDisplay = (res) => {
-        setSubResult(res.pldetails);
-        setShowPlDialog(true);
-    };
     const hideSHowPlDialog = () => {
         setShowPlDialog(false);
         setSubResult(null);

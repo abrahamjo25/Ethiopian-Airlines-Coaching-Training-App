@@ -331,9 +331,6 @@ const Costcenter = () => {
                     <i className="pi pi-search" />
                     <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
                 </span>
-                <span className="p-input-icon-left">
-                    <SplitButton label="Advance Search" icon="pi pi-search" model={searchItems} className="p-mr-2"></SplitButton>
-                </span>
             </div>
         </div>
     );

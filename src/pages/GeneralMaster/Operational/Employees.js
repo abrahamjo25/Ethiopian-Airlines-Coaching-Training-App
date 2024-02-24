@@ -17,7 +17,7 @@ import url from "../../../utilities/files/employees.csv";
 import { SplitButton } from "primereact/splitbutton";
 import { Checkbox } from "primereact/checkbox";
 import "../../../assets/css/DataTableDemo.css";
-
+import { HasRoles } from "../../../services/RoleServices";
 const Employee = () => {
     let emptyResult = {
         employeeId: null,
@@ -66,10 +66,10 @@ const Employee = () => {
         { label: "Non-Management", value: 2 },
     ];
     let employeeType = [
-        { label: "EA(Permanent)", value: 'P' },
-        { label: "EA(Contract)", value: 'C' },
-        { label: "Retiree", value: 'R' },
-        { label: "Board", value: 'B' },
+        { label: "EA(Permanent)", value: "P" },
+        { label: "EA(Contract)", value: "C" },
+        { label: "Retiree", value: "R" },
+        { label: "Board", value: "B" },
     ];
     useEffect(() => {
         fetchEmployee();
@@ -341,9 +341,7 @@ const Employee = () => {
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
-                    <Button label="Create New" disabled={loading} icon="pi pi-plus" style={{ backgroundColor: BASE_COLOR }} onClick={openNew} />
-                </div>
+                <div className="my-2">{HasRoles("Emplyee-Manage") && <Button label="Create New" disabled={loading} icon="pi pi-plus" style={{ backgroundColor: BASE_COLOR }} onClick={openNew} />}</div>
             </React.Fragment>
         );
     };
@@ -351,7 +349,7 @@ const Employee = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button icon="pi pi-upload" className="mr-2 inline-block" label="Import" onClick={openUpload} style={{ backgroundColor: SECONDARY_COLOR, color: "#FFFFF" }} />
+                {HasRoles("Emplyee-Manage") && <Button icon="pi pi-upload" className="mr-2 inline-block" label="Import" onClick={openUpload} style={{ backgroundColor: SECONDARY_COLOR, color: "#FFFFF" }} />}
                 <Button label="Export CSV" icon="pi pi-download" style={{ backgroundColor: BASE_COLOR }} className="p-button-help" onClick={exportCSV} />
             </React.Fragment>
         );
@@ -389,21 +387,19 @@ const Employee = () => {
         return <SplitButton label="Manage" className="p-button-raised p-button-success p-button-text mr-2 mb-2" model={pages(data)} onClick={(e) => pages(data)}></SplitButton>;
     };
 
-    const handleKeyDown = (event) => {
-        if (event.key === "Enter") {
-            getData(`/Employees/GetByEmployeeId?employeeId=${globalFilter}`, "Employee-Index")
-                .then((res) => {
-                    if (res) {
-                        setResults([res.data]);
-                        setGlobalFilter(null);
-                    }
-                })
-                .catch((error) => {
-                    if (error.name === "AbortError") {
-                        console.log("Request Cancled!");
-                    }
-                });
-        }
+    const getEmployeeById = (event) => {
+        getData(`/Employees/GetByEmployeeId?employeeId=${globalFilter}`, "Employee-Index")
+            .then((res) => {
+                if (res) {
+                    setResults([res.data]);
+                    setGlobalFilter(null);
+                }
+            })
+            .catch((error) => {
+                if (error.name === "AbortError") {
+                    console.log("Request Cancled!");
+                }
+            });
     };
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -411,8 +407,9 @@ const Employee = () => {
             <div>
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} onKeyDown={handleKeyDown} placeholder="Employee Id" />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Employee Id" />
                 </span>
+                {HasRoles("Employee-SearchAll") && <Button icon="pi pi-search" label="Search" onClick={getEmployeeById} />}
             </div>
         </div>
     );
@@ -472,7 +469,7 @@ const Employee = () => {
                                 <Column field="costCenterCode" header="Cost center" filter className="p-column-title"></Column>
                                 <Column field="mgmtStatus" header="Management Status" className="p-column-title"></Column>
                                 <Column field="recordStatus" header="Status" body={statusBody} className="p-column-title"></Column>
-                                <Column body={actionBodyTemplate}></Column>
+                                {HasRoles("Emplyee-Manage") && <Column body={actionBodyTemplate}></Column>}
                             </DataTable>
                             <Dialog visible={resultDialog} style={{ width: "1200px" }} header="" modal className="p-fluid" footer={resultDialogFooter} onHide={hideDialog}>
                                 <div className="card p-fluid" style={{ borderColor: BASE_COLOR }}>
