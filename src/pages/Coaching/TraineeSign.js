@@ -178,12 +178,12 @@ const TraineeSign = () => {
                             header={header}
                             responsiveLayout="scroll"
                             rowGroupMode="rowspan"
-                            groupRowsBy="plCode"
+                            groupRowsBy="taskCode"
                             sortMode="single"
                         >
-                            <Column field="plCode" headerStyle={{ width: "10%", minWidth: "4rem" }} className="p-column-title"></Column>
-                            <Column field="" header="No" body={rowCount} className="p-column-title"></Column>
                             <Column field="taskCode" header="Task Code" className="p-column-title"></Column>
+                            <Column field="" header="No" body={rowCount} className="p-column-title"></Column>
+                            {/* <Column field="plCode" headerStyle={{ width: "10%", minWidth: "4rem" }} className="p-column-title"></Column> */}
                             <Column field="task" header="Description" className="p-column-title"></Column>
                             <Column field="coachApproval" header="Status" body={statusBody} className="p-column-title"></Column>
                             <Column header="Take Action" body={traineeAction} className="p-column-title"></Column>

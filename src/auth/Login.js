@@ -61,7 +61,8 @@ function Login() {
                             localStorage.setItem("user", JSON.stringify(res.data));
                             localStorage.setItem("idToken", res.data.idToken);
                             localStorage.setItem("userRefreshToken", res.data.refreshToken);
-                            // checkEmployee(res.data.username);
+                            const newLastVisit = new Date().toISOString();
+                            localStorage.setItem("lastVisit", newLastVisit);
                             setLoading(false);
                             history.push("/");
                         }

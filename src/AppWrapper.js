@@ -13,6 +13,7 @@ import Loading from "./pages/Defaults/Loading";
 import { HelpCenter } from "./Help/HelpCenter";
 import Docs from "./pages/Docs";
 import CreateDocs from "./pages/Docs/Create";
+import { AuthProvider } from "./auth/Auth";
 const AppWrapper = (props) => {
     let location = useLocation();
 
@@ -44,7 +45,9 @@ const AppWrapper = (props) => {
         default:
             return (
                 <Suspense fallback={Loading}>
-                    <App />
+                    <AuthProvider>
+                        <App />
+                    </AuthProvider>
                 </Suspense>
             );
     }

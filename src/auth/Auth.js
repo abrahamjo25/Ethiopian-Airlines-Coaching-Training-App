@@ -1,48 +1,39 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import { useHistory } from "react-router-dom";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
-    // useEffect(() => {
-    //     if (isTokenActive()) {
-    //         updateTokenExpiration();
-    //     } else {
-    //         clearAllCookies();
-    //         localStorage.clear();
-    //     }
-    // }, []);
-    const isTokenActive = () => {
-        const token = Cookies.get("token");
-        if (!token) {
-            return false;
+    const [lastVisit, setLastVisit] = useState(localStorage.getItem("lastVisit"));
+    const history = useHistory();
+    useEffect(() => {
+        if (lastVisit) {
+            const lastVisitTime = new Date(lastVisit).getTime();
+            const currentTime = new Date().getTime();
+            const timeDifferenceMinutes = (currentTime - lastVisitTime) / (1000 * 60);
+
+            if (timeDifferenceMinutes >= 30) {
+                // Reset local storage data or perform your desired action
+                localStorage.clear();
+                history.push("/user-login");
+                console.log("Local storage data reset!");
+            }
         }
 
-        const expirationTime = new Date(Cookies.get("token_expiration"));
-        const currentTime = new Date();
+        // Update last visit time in local storage
+        const newLastVisit = new Date().toISOString();
+        localStorage.setItem("lastVisit", newLastVisit);
+        setLastVisit(newLastVisit);
 
-        return currentTime < expirationTime;
-    };
-    const clearAllCookies = () => {
-        document.cookie.split(";").forEach((cookie) => {
-            document.cookie = cookie.replace(/^ +/, "").replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-        });
-    };
-    const [idToken, setIdToken] = useState(Cookies.get("token"));
-    const [accessToken, setAccessToken] = useState(null);
-    const setTokenWithExpiry = (token, expiresInSeconds) => {
-        setIdToken(token);
-        Cookies.set("idToken", token, { expires: expiresInSeconds / (60 * 60 * 24) });
-    };
+        // Set up interval for periodic checks (optional)
+        const interval = setInterval(() => {
+            // Implement the same logic here
+        }, 60000); // 1 minute interval (adjust as needed)
 
-    const updateTokenExpiration = () => {
-        const token = Cookies.get("idToken");
-        if (token) {
-            setIdToken(token);
-            Cookies.set("idToken", token, { expires: 1 / 96 });
-        }
-    };
+        // Cleanup interval on component unmount (optional)
+        return () => clearInterval(interval);
+    }, [lastVisit]);
 
-    return <AuthContext.Provider value={{ accessToken, setAccessToken, idToken, setTokenWithExpiry, updateTokenExpiration }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ lastVisit }}>{children}</AuthContext.Provider>;
 };
 export const useAuth = () => {
     return useContext(AuthContext);
