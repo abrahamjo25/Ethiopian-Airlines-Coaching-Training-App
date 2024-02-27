@@ -123,7 +123,7 @@ const TraineerList = () => {
         setSelectedPl(null);
         setPlHeader(null);
         setTrainer(null);
-    }
+    };
     const saveResult = async () => {
         debugger;
         setSubmitted(true);
@@ -176,7 +176,7 @@ const TraineerList = () => {
     };
     const confirmApprove = async () => {
         setWaiting(true);
-        let data = await putData(`/Trainer/ManagerApproval?Id=${result?.id}`, "Trainer-Index");
+        let data = await putData(`/Trainer/ManagerApproval?Id=${result?.id}`, "", "Trainer-Index");
         if (data) {
             setResults((prev) =>
                 prev?.map((item) => {

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect } from "react";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = "https://localhost:7105/api/v1";
+// const baseURL = process.env.REACT_APP_BASE_URL;
 const authURL = process.env.REACT_APP_AUTH_URL;
 const clientCredential = {
     clientId: process.env.REACT_APP_CLIENT_ID,

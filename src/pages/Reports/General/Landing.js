@@ -123,10 +123,12 @@ export const Landing = () => {
     const groupDataByStatus = (data, filter) => {
         const groupedData = data?.reduce((acc, curr) => {
             const status = curr[filter];
-            if (acc[status]) {
-                acc[status] += 1;
-            } else {
-                acc[status] = 1;
+            if (status !== null && status !== "") {
+                if (acc[status]) {
+                    acc[status] += 1;
+                } else {
+                    acc[status] = 1;
+                }
             }
             return acc;
         }, {});

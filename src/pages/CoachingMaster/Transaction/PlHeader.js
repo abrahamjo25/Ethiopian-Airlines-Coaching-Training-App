@@ -240,6 +240,7 @@ const Plheader = () => {
     const plAproval = async () => {
         setWaiting(true);
         let data = await putData(`/PlHeader/ManagerApproval?plCode=${plcodes?.plCode}`, "", "Plheader-Index");
+        setWaiting(false);
         if (data) {
             setResults((prev) =>
                 prev?.map((item) => {

@@ -93,7 +93,7 @@ const Planning = () => {
     };
     const confirmapprove = async () => {
         setWaiting(true);
-        let data = await putData(`/AnnualPlan/HRApproval?id=${result?.id}`, "AnnualPlan-Approval");
+        let data = await putData(`/AnnualPlan/HRApproval?id=${result?.id}`, "", "AnnualPlan-Approval");
         if (data) {
             setResults((prev) =>
                 prev?.map((item) => {

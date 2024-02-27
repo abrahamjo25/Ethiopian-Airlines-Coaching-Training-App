@@ -271,6 +271,7 @@ const AnnualPlans = () => {
         setSelected(true);
     };
     const onEmployeeChange = (e, name) => {
+        debugger;
         const val = (e.target && e.target.value) || "";
         let _result = { ...result };
         _result["id"] = val?.id;

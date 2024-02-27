@@ -64,7 +64,7 @@ const Trainer = () => {
     };
     const confirmapprove = async () => {
         setWaiting(true);
-        let data = await putData(`/Trainer/HRApproval?id=${result?.id}`, "Trainer-Approval");
+        let data = await putData(`/Trainer/HRApproval?id=${result?.id}`, "", "Trainer-Approval");
         if (data) {
             setResults((prev) =>
                 prev?.map((item) => {
